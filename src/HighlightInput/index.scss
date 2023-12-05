@@ -1,0 +1,82 @@
+$preCls: 'c-highlight';
+
+.#{$preCls}-input {
+  // position: relative;
+  // z-index: 1;
+  // box-sizing: border-box;
+  // flex: 1 1 auto;
+  // width: 100%;
+  // min-width: 100px;
+  // font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', STHeitiSC, Helvetica, 'Helvetica Neue', 'Microsoft YaHei', Tahoma;
+  // color: rgb(14, 17, 20);
+  img {
+    resize: none;
+    pointer-events: none;
+    vertical-align: bottom;
+  }
+  // &:hover {
+  //   .editor {
+  //     border-color: rgb(128, 183, 255);
+
+  //     &:focus {
+  //       border-color: rgb(71, 145, 255);
+  //     }
+
+  //     &[disabled] {
+  //       border-color: rgb(230, 232, 235);
+  //     }
+  //   }
+
+  // }
+  &__input-editor {
+    // display: inline-block;
+    // box-sizing: border-box;
+    // width: 100%;
+    // height: 30px;
+    // font-size: 12px;
+    // /* 解决chrome中input文本内容在12px时无法垂直居中的问题 */
+    // line-height: 20px;
+    // padding: 4px 8px;
+    // border: 1px solid rgb(230, 232, 235);
+    // border-radius: 4px;
+    // background-color: rgb(255, 255, 255);
+    // outline: none;
+    // overflow: hidden;
+    // cursor: text;
+    // color: rgb(14, 17, 20);
+    // word-break: keep-all;
+    // white-space: nowrap;
+
+    // &::-ms-clear {
+    //   width: 0;
+    //   height: 0;
+    // }
+
+    &:empty:before {
+      color: gray;
+      content: attr(placeholder);
+    }
+
+    // &:hover {
+    //   border-color: rgb(128, 183, 255);
+    // }
+
+    // &:focus {
+    //   border-color: rgb(71, 145, 255)
+    // }
+
+    // &[disabled] {
+    //   // color: transparent;
+    //   background-color: transparent;
+    //   text-overflow: ellipsis;
+    //   cursor: not-allowed;
+    //   &:hover {
+    //     border-color: rgb(230, 232, 235);
+    //   }
+    // }
+    // &[readonly] {
+    //   pointer-events: none;
+    // }
+  }
+}
+
