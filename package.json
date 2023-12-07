@@ -1,7 +1,12 @@
 {
   "name": "highlight-input",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "a",
+  "homepage": "https://github.com/liuzheng644607/highlight-input",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:liuzheng644607/highlight-input.git"
+  },
   "license": "MIT",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
@@ -15,7 +20,7 @@
     "dev": "dumi dev",
     "docs:build": "dumi build",
     "doctor": "father doctor",
-    "lint": "npm run lint:es && npm run lint:css",
+    "lint": "npm run lint:C && npm run lint:css",
     "lint:css": "stylelint \"{src,test}/**/*.{css,less}\"",
     "lint:es": "eslint \"{src,test}/**/*.{js,jsx,ts,tsx}\"",
     "prepare": "husky install && dumi setup",
