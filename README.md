@@ -3,7 +3,14 @@
 [![NPM version](https://img.shields.io/npm/v/highlight-input.svg?style=flat)](https://npmjs.org/package/highlight-input)
 [![NPM downloads](http://img.shields.io/npm/dm/highlight-input.svg?style=flat)](https://npmjs.org/package/highlight-input)
 
-highlight-input
+highlight-input is a React component designed to enhance user experience by providing keyword highlighting functionality within text input fields. Easily integrate this component into your React applications to dynamically highlight specified keywords as users type or interact with the input, facilitating easier navigation and comprehension within large text datasets.
+
+<iframe src="https://codesandbox.io/embed/2jfstl?view=Preview&module=%2Fsrc%2FApp.tsx&hidenavigation=1"
+     style="width:100%; height: 500px; border:0; border-radius: 4px; overflow:hidden;"
+     title="highlight-input"
+     allow="accelerometer; ambient-light-sensor; camera; encrypted-media; geolocation; gyroscope; hid; microphone; midi; payment; usb; vr; xr-spatial-tracking"
+     sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
+   ></iframe>
 
 ## Usage
 
@@ -18,19 +25,19 @@ import HighlightInput from 'highlight-input';
 export default () => {
   const inputInstanceRef = useRef(null);
   const [state, setState] = useState({
-    fileName: '',
+    inputValue: '',
   });
   return (
     <>
       <HighlightInput
         ref={inputInstanceRef}
-        placeholder="请输入..."
-        value={state.fileName}
+        placeholder="Enter some stuff..."
+        value={state.inputValue}
         onChange={(v) => {
           setState((prev) => {
             return {
               ...prev,
-              fileName: v,
+              inputValue: v,
             };
           });
         }}
@@ -38,12 +45,12 @@ export default () => {
       <button
         onClick={() => {
           inputInstanceRef.current?.insertKeywords({
-            label: '操作人',
-            value: '${user}',
+            label: 'Operator',
+            value: '${model.operator}',
           });
         }}
       >
-        操作人
+        Insert operator
       </button>
     </>
   );
@@ -90,28 +97,6 @@ export interface Props {
         keywords: Keywords,
       ) => React.CSSProperties);
 }
-```
-
-## Development
-
-```bash
-# install dependencies
-$ npm install
-
-# develop library by docs demo
-$ npm start
-
-# build library source code
-$ npm run build
-
-# build library source code in watch mode
-$ npm run build:watch
-
-# build docs
-$ npm run docs:build
-
-# check your project for potential problems
-$ npm run doctor
 ```
 
 ## LICENSE

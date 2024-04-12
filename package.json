@@ -1,7 +1,7 @@
 {
   "name": "highlight-input",
   "version": "0.0.2",
-  "description": "a",
+  "description": "highlight-input is a React component designed to enhance user experience by providing keyword highlighting functionality within text input fields. Easily integrate this component into your React applications to dynamically highlight specified keywords as users type or interact with the input, facilitating easier navigation and comprehension within large text datasets.",
   "homepage": "https://github.com/liuzheng644607/highlight-input",
   "repository": {
     "type": "git",
