@@ -57,6 +57,10 @@ $preCls: 'c-highlight';
       content: attr(placeholder);
     }
 
+    &-alow-break {
+      white-space: pre-wrap;
+    }
+
     // &:hover {
     //   border-color: rgb(128, 183, 255);
     // }

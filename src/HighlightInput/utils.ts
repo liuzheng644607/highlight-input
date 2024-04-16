@@ -144,13 +144,14 @@ ${container.outerHTML}
 
 function filterRichValue(
   node: any,
+  allowLineBreak: boolean,
   cbk: (v: string | Keywords, node: any) => void,
 ) {
   // 文本节点
   if (node.nodeType === 3) {
     cbk(
       node?.data
-        ?.replace?.(/[\n\r]/g, '')
+        ?.replace?.(allowLineBreak ? '' : /[\n\r]/g, '')
         ?.replace(/\u00a0/g, ' ')
         ?.replace(/&nbsp;/g, ' '),
       node,
@@ -178,7 +179,7 @@ function filterRichValue(
       len = childNodes.length || 0;
     for (i; i < len; i++) {
       item = childNodes[i];
-      filterRichValue(item, cbk);
+      filterRichValue(item, allowLineBreak, cbk);
     }
   }
 }
@@ -202,12 +203,15 @@ export function htmlEncode(s: string) {
  * @param html
  * @returns
  */
-export const convertHTMLStringToRichValue = (html?: string) => {
+export const convertHTMLStringToRichValue = (
+  html?: string,
+  allowLineBreak = false,
+) => {
   if (!html) return [];
   const tempDiv = document.createElement('div');
   tempDiv.innerHTML = html;
   let value: RichValue = [];
-  filterRichValue(tempDiv, (v) => {
+  filterRichValue(tempDiv, allowLineBreak, (v) => {
     if (v) {
       value.push(v);
     }

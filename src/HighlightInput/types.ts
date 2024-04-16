@@ -26,7 +26,11 @@ export interface Props {
   prefix?: React.ReactNode;
   suffix?: React.ReactNode;
   /**
-   * 自定义keywords样式
+   * Whether to allow line breaks, like the textarea element
+   */
+  allowLineBreak?: boolean;
+  /**
+   * Custom keywords style
    */
   keywordsStyle?:
     | React.CSSProperties

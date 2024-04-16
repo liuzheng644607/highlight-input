@@ -34,6 +34,7 @@ const RichTextInput = forwardRef<InputInstance, Props>((props, ref) => {
     onBlur,
     prefix,
     suffix,
+    allowLineBreak = false,
   } = props;
   const [value, setValue] = useControlValue<RichValue, Props>(props);
   const editorRef = useRef<HTMLDivElement>(null);
@@ -54,7 +55,6 @@ const RichTextInput = forwardRef<InputInstance, Props>((props, ref) => {
       backgroundColor: 'rgba(194, 224, 255, 0.5)',
       lineHeight: rootStyle?.lineHeight,
       textAlign: 'center',
-      // padding: '1px 0 1px 0'
     };
     let styles = {
       ...defaultStyle,
@@ -84,12 +84,17 @@ const RichTextInput = forwardRef<InputInstance, Props>((props, ref) => {
 
       if (pastedText) {
         // 不要换行符
-        pastedText = pastedText.replace(/[\r\n]/g, '');
+        pastedText = allowLineBreak
+          ? pastedText
+          : pastedText.replace(/[\r\n]/g, '');
         // 去掉meta标签及换行,去掉内联样式
         const regex = /(<(meta|br).*?>)|(\sstyle=".*?")|(\n)/gi;
         pastedText = pastedText.replace(regex, '');
         // 尝试把复制的内容格式化成richValue
-        let pastedRichValue = convertHTMLStringToRichValue(pastedText);
+        let pastedRichValue = convertHTMLStringToRichValue(
+          pastedText,
+          allowLineBreak,
+        );
         const includeKeywords = pastedRichValue.find(
           (item) => typeof item !== 'string',
         );
@@ -100,7 +105,10 @@ const RichTextInput = forwardRef<InputInstance, Props>((props, ref) => {
               'text/plain',
             ),
           );
-          pastedRichValue = convertHTMLStringToRichValue(pastedText);
+          pastedRichValue = convertHTMLStringToRichValue(
+            pastedText,
+            allowLineBreak,
+          );
         }
         if (editorRef.current) {
           pastedText = convertRichValueToHTMLString(
@@ -110,44 +118,50 @@ const RichTextInput = forwardRef<InputInstance, Props>((props, ref) => {
           document.execCommand('insertHTML', false, pastedText);
           const richValue = convertHTMLStringToRichValue(
             editorRef.current.innerHTML,
+            allowLineBreak,
           );
           handleChange(richValue);
         }
       }
       return false;
     },
-    [setValue],
+    [setValue, allowLineBreak],
   );
 
   const handleKeydown: React.KeyboardEventHandler<HTMLDivElement> = useCallback(
     (e) => {
       // 防止输入换行
-      if (e.key === 'Enter') {
+      if (!allowLineBreak && e.key === 'Enter') {
         e.preventDefault();
       }
     },
-    [],
+    [allowLineBreak],
   );
 
-  useImperativeHandle(ref, () => {
-    return {
-      insertKeywords: (keywords) => {
-        if (!editorRef.current) {
-          return;
-        }
-        const keywordsNodeString = makeKeywordsNodeString(
-          keywords,
-          getKeywordsStyle,
-        );
-        editorRef.current?.focus();
-        insertHtmlAtCaret(keywordsNodeString, range.current);
-        const richValue = convertHTMLStringToRichValue(
-          editorRef.current.innerHTML,
-        );
-        handleChange(richValue);
-      },
-    };
-  });
+  useImperativeHandle(
+    ref,
+    () => {
+      return {
+        insertKeywords: (keywords) => {
+          if (!editorRef.current) {
+            return;
+          }
+          const keywordsNodeString = makeKeywordsNodeString(
+            keywords,
+            getKeywordsStyle,
+          );
+          editorRef.current?.focus();
+          insertHtmlAtCaret(keywordsNodeString, range.current);
+          const richValue = convertHTMLStringToRichValue(
+            editorRef.current.innerHTML,
+            allowLineBreak,
+          );
+          handleChange(richValue);
+        },
+      };
+    },
+    [allowLineBreak],
+  );
 
   const handleSelectCapture = useCallback(() => {
     range.current = window.getSelection()?.getRangeAt(0)?.cloneRange();
@@ -166,7 +180,8 @@ const RichTextInput = forwardRef<InputInstance, Props>((props, ref) => {
       ' ',
     );
 
-    const innerValue = convertHTMLStringToRichValue(innerHtmlString) || [];
+    const innerValue =
+      convertHTMLStringToRichValue(innerHtmlString, allowLineBreak) || [];
     let isEqual = true;
     if (innerValue.length !== value?.length) {
       isEqual = false;
@@ -196,7 +211,7 @@ const RichTextInput = forwardRef<InputInstance, Props>((props, ref) => {
     if (!isEqual) {
       editorRef.current.innerHTML = htmlString;
     }
-  }, [value]);
+  }, [value, allowLineBreak]);
   useEffect(() => {
     const el = editorRef.current;
     const customEventName = 'input';
@@ -211,7 +226,7 @@ const RichTextInput = forwardRef<InputInstance, Props>((props, ref) => {
     const handleInput = (e: any) => {
       if (isComposing.current) return;
       const innerHTML = e.currentTarget.innerHTML;
-      const richValue = convertHTMLStringToRichValue(innerHTML);
+      const richValue = convertHTMLStringToRichValue(innerHTML, allowLineBreak);
       handleChange(richValue);
     };
     el?.addEventListener('compositionstart', handleCompositionStart);
@@ -226,12 +241,14 @@ const RichTextInput = forwardRef<InputInstance, Props>((props, ref) => {
         el.removeEventListener(customEventName, handleInput);
       }
     };
-  }, []);
+  }, [allowLineBreak]);
   return (
     <div className={`${clsPrefix}-input ${className}`} contentEditable={false}>
       {prefix}
       <div
-        className={`${clsPrefix}-input__input-editor ${editorClassName}`}
+        className={`${clsPrefix}-input__input-editor ${
+          allowLineBreak ? `${clsPrefix}-input__input-editor-alow-break` : ''
+        } ${editorClassName}`}
         ref={editorRef}
         contentEditable={!disabled}
         onPaste={handlePaste}
