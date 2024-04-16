@@ -158,6 +158,9 @@ const RichTextInput = forwardRef<InputInstance, Props>((props, ref) => {
           );
           handleChange(richValue);
         },
+        get element() {
+          return editorRef.current;
+        },
       };
     },
     [allowLineBreak],

@@ -65,6 +65,7 @@ export interface Keywords {
 
 export interface InputInstance {
   insertKeywords: (keywords: Keywords) => void;
+  element: HTMLDivElement | null;
 }
 
 export type RichValue = Array<Keywords | string>;
